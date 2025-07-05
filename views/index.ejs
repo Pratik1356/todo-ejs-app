@@ -1,0 +1,47 @@
+<%- include("partials/header") %>
+
+<form action="/add" method="POST" class="add-form">
+  <input type="text" name="content" placeholder="Add a new task" />
+  <select name="priority">
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </select>
+  <button type="submit">Add</button>
+</form>
+
+<form method="GET" action="/" class="filter-form">
+  <label for="priority-filter">Filter by Priority:</label>
+  <select name="priority" id="priority-filter" onchange="this.form.submit()">
+    <option value="">All</option>
+    <option value="Low" <%= filter === 'Low' ? 'selected' : '' %>>Low</option>
+    <option value="Medium" <%= filter === 'Medium' ? 'selected' : '' %>>Medium</option>
+    <option value="High" <%= filter === 'High' ? 'selected' : '' %>>High</option>
+  </select>
+</form>
+
+<ul class="todo-list">
+  <% todos.forEach(todo => { %>
+    <li class="<%= todo.isDone ? 'done' : '' %>">
+      <form action="/done/<%= todo.id %>" method="POST" class="inline-form">
+        <button type="submit"><%= todo.isDone ? '✅' : '⬜' %></button>
+      </form>
+
+      <form action="/edit/<%= todo.id %>" method="POST" class="inline-form">
+        <input type="text" name="content" value="<%= todo.content %>" required />
+        <select name="priority">
+          <option value="Low" <%= todo.priority === 'Low' ? 'selected' : '' %>>Low</option>
+          <option value="Medium" <%= todo.priority === 'Medium' ? 'selected' : '' %>>Medium</option>
+          <option value="High" <%= todo.priority === 'High' ? 'selected' : '' %>>High</option>
+        </select>
+        <button type="submit">✏️</button>
+      </form>
+
+      <form action="/delete/<%= todo.id %>" method="POST" class="inline-form">
+        <button type="submit">🗑️</button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+
+<%- include("partials/footer") %>
